@@ -10,7 +10,10 @@ import androidx.fragment.app.Fragment;
 import com.example.notes.R;
 import com.example.notes.database.NotesDAO;
 import com.example.notes.models.Note;
+
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 public class NoteEditFragment extends Fragment {
 
@@ -36,17 +39,29 @@ public class NoteEditFragment extends Fragment {
             contentEditText.setText(note.getContent());
         }
 
+        Spinner spinnerCategory = view.findViewById(R.id.spinnerCategory);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                requireContext(), R.array.categories, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(adapter);
+
+// Установить текущую категорию
+        if (note != null) {
+            int position = adapter.getPosition(note.getCategory());
+            spinnerCategory.setSelection(position);
+        }
+
         view.findViewById(R.id.btnSaveNote).setOnClickListener(v -> {
             if (note != null) {
                 note.setTitle(titleEditText.getText().toString());
                 note.setContent(contentEditText.getText().toString());
+                note.setCategory(spinnerCategory.getSelectedItem().toString());
                 note.setTimestamp(System.currentTimeMillis());
                 notesDAO.updateNote(note);
             }
-
-            // Navigate back to notes list
             getParentFragmentManager().popBackStack();
         });
+
 
         return view;
     }

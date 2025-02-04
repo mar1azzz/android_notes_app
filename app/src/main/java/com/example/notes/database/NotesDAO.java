@@ -70,11 +70,18 @@ public class NotesDAO {
     }
 
     // Delete a note by ID
-    public void deleteNoteById(int id) {
+    public void deleteNote(int noteId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete(NotesDatabaseHelper.TABLE_NOTES,
-                NotesDatabaseHelper.COLUMN_ID + " = ?",
-                new String[]{String.valueOf(id)});
+        db.delete("notes", "id=?", new String[]{String.valueOf(noteId)});
         db.close();
     }
+
+    public void updateCategory(int noteId, String newCategory) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("category", newCategory);
+        db.update("notes", values, "id=?", new String[]{String.valueOf(noteId)});
+        db.close();
+    }
+
 }

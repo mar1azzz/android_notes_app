@@ -1,28 +1,36 @@
 package com.example.notes.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.Spinner;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.notes.R;
 import com.example.notes.adapters.NotesAdapter;
 import com.example.notes.database.NotesDAO;
-import com.example.notes.database.NotesDatabaseHelper;
 import com.example.notes.models.Note;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
-// Fragment for displaying all notes
 public class NotesListFragment extends Fragment {
-
     private NotesDAO notesDAO;
     private NotesAdapter adapter;
+    private Spinner spinnerSort;
+    private EditText editTextSearch;
 
     @Nullable
     @Override
@@ -31,12 +39,12 @@ public class NotesListFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewNotes);
         FloatingActionButton fab = view.findViewById(R.id.fabAddNote);
+        spinnerSort = view.findViewById(R.id.spinnerSort);
+        editTextSearch = view.findViewById(R.id.editTextSearch);
 
         notesDAO = new NotesDAO(requireContext());
-        List<Note> notes = notesDAO.getAllNotes("timestamp DESC");
-
-        adapter = new NotesAdapter(notes, note -> {
-            // Navigate to edit note fragment
+        adapter = new NotesAdapter(notesDAO.getAllNotes("timestamp DESC"), note -> {
+            // Открываем фрагмент редактирования заметки
             Bundle bundle = new Bundle();
             bundle.putSerializable("note", note);
             getParentFragmentManager()
@@ -44,13 +52,12 @@ public class NotesListFragment extends Fragment {
                     .replace(R.id.fragmentContainer, NoteEditFragment.class, bundle)
                     .addToBackStack(null)
                     .commit();
-        });
+        }, notesDAO);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
 
         fab.setOnClickListener(v -> {
-            // Navigate to add note fragment
             getParentFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragmentContainer, new NoteAddFragment())
@@ -58,6 +65,60 @@ public class NotesListFragment extends Fragment {
                     .commit();
         });
 
+        adapter.setOnItemLongClickListener(note -> {
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Удалить заметку?")
+                    .setMessage("Вы уверены, что хотите удалить эту заметку?")
+                    .setPositiveButton("Удалить", (dialog, which) -> {
+                        notesDAO.deleteNote(note.getId());
+                        updateNotes();
+                    })
+                    .setNegativeButton("Отмена", null)
+                    .show();
+        });
+
+        // Обработчик выбора в спиннере
+        spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateNotes();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        // Обработчик ввода в поле поиска
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                updateNotes();
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
         return view;
+    }
+
+    private void updateNotes() {
+        String query = editTextSearch.getText().toString().toLowerCase();
+        String sortOrder = getSortOrder(spinnerSort.getSelectedItemPosition());
+
+        List<Note> filteredNotes = notesDAO.getAllNotes(sortOrder).stream()
+                .filter(note -> note.getTitle().toLowerCase().contains(query) ||
+                        note.getCategory().toLowerCase().contains(query))
+                .collect(Collectors.toList());
+
+        adapter.updateData(filteredNotes);
+    }
+
+    private String getSortOrder(int position) {
+        switch (position) {
+            case 1: return "category ASC";
+            case 2: return "category ASC, timestamp DESC";
+            default: return "timestamp DESC";
+        }
     }
 }

@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">notes</string>
+    <string-array name="categories">
+        <item>Дом</item>
+        <item>Работа</item>
+        <item>Хобби</item>
+        <item>Семья</item>
+        <item>Здоровье</item>
+        <item>Учёба</item>
+    </string-array>
 </resources>
+
+
