@@ -1,6 +1,5 @@
 package com.example.notes.fragments;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +13,7 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,17 +65,25 @@ public class NotesListFragment extends Fragment {
                     .commit();
         });
 
-        adapter.setOnItemLongClickListener(note -> {
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("Удалить заметку?")
-                    .setMessage("Вы уверены, что хотите удалить эту заметку?")
-                    .setPositiveButton("Удалить", (dialog, which) -> {
-                        notesDAO.deleteNote(note.getId());
-                        updateNotes();
-                    })
-                    .setNegativeButton("Отмена", null)
-                    .show();
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+                adapter.moveItem(fromPosition, toPosition);
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // Не используем свайп
+            }
         });
+
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         // Обработчик выбора в спиннере
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

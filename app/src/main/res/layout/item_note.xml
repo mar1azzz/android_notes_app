@@ -6,9 +6,9 @@
     android:orientation="vertical"
     android:padding="12dp"
     android:background="?android:attr/selectableItemBackground"
-    android:clickable="true">
+    android:clickable="true"
+    android:focusable="true">
 
-    <!-- Контейнер для категории и иконки удаления -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,14 +34,10 @@
             android:src="@android:drawable/ic_menu_delete"
             app:tint="@android:color/black" />
     </LinearLayout>
-
-    <!-- Контейнер для заголовка и контента (расширенная область нажатия) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:clickable="true"
-        android:focusable="true"
         android:background="?android:attr/selectableItemBackground"
         android:padding="8dp">
 

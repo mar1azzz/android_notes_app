@@ -15,6 +15,7 @@ import com.example.notes.R;
 import com.example.notes.database.NotesDAO;
 import com.example.notes.models.Note;
 
+import java.util.Collections;
 import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
@@ -61,6 +62,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             notesDAO.deleteNote(note.getId());
             updateData(notesDAO.getAllNotes("timestamp DESC"));
         });
+
+       // holder.itemView.setOnClickListener(v -> onNoteClickListener.onNoteClick(note));
+
     }
 
     @Override
@@ -104,10 +108,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         void onItemLongClick(Note note);
     }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
-        this.onItemLongClickListener = listener;
-    }
-
     public void updateData(List<Note> newNotes) {
         this.notes = newNotes;
         notifyDataSetChanged();
@@ -125,4 +125,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             default: return Color.GRAY; // Серый по умолчанию
         }
     }
+
+    public void moveItem(int fromPosition, int toPosition) {
+        Collections.swap(notes, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
 }
