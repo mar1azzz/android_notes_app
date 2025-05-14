@@ -1,49 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sortContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     tools:context=".fragments.NotesListFragment">
 
-    <LinearLayout
-        android:id="@+id/sortContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+    <!-- Сортировка -->
 
-        <Spinner
-            android:id="@+id/spinnerSort"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/sort_options" />
+    <!-- Поиск -->
+    <Spinner
+        android:id="@+id/spinnerSort"
+        android:layout_width="391dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="18dp"
+        android:entries="@array/sort_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/editTextSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Поиск..."
-            android:drawableStart="@android:drawable/ic_menu_search" />
-    </LinearLayout>
+    <EditText
+        android:id="@+id/editTextSearch"
+        android:layout_width="391dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:hint="Поиск заметки..."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spinnerSort" />
 
+    <!-- Список заметок -->
+
+    <!-- FAB -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewNotes"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/sortContainer"
-        android:padding="8dp"
-        android:scrollbars="vertical" />
+        android:layout_width="395dp"
+        android:layout_height="500dp"
+        android:paddingTop="0dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@id/fabAddNote"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextSearch"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
+        android:layout_margin="25dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="52dp"
         android:src="@drawable/ic_add"
-        app:backgroundTint="@color/primaryColor" />
+        app:backgroundTint="@color/primaryColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

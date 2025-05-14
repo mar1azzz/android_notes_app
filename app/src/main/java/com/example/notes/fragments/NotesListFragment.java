@@ -116,7 +116,9 @@ public class NotesListFragment extends Fragment {
 
         List<Note> filteredNotes = notesDAO.getAllNotes(sortOrder).stream()
                 .filter(note -> note.getTitle().toLowerCase().contains(query) ||
-                        note.getCategory().toLowerCase().contains(query))
+                        note.getCategory().toLowerCase().contains(query)||
+                        note.getContent() != null && note.getContent().toLowerCase().contains(query)
+                )
                 .collect(Collectors.toList());
 
         adapter.updateData(filteredNotes);

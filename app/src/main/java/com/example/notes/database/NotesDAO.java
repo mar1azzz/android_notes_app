@@ -75,13 +75,13 @@ public class NotesDAO {
         db.delete("notes", "id=?", new String[]{String.valueOf(noteId)});
         db.close();
     }
-
+/*
     public void updateCategory(int noteId, String newCategory) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("category", newCategory);
         db.update("notes", values, "id=?", new String[]{String.valueOf(noteId)});
         db.close();
-    }
+    }*/
 
 }

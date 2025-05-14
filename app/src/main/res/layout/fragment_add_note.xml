@@ -1,41 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editTextNoteTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Заголовок"
-        android:textSize="18sp"
-        android:inputType="text"/>
-    <Spinner
-        android:id="@+id/spinnerCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/categories"/>
+    <!-- Контент, скроллится над кнопкой Сохранить -->
+    <ScrollView
+        android:id="@+id/scrollContainer"
+        android:layout_width="396dp"
+        android:layout_height="700dp"
+        android:layout_above="@id/btnSaveNote"
+        android:layout_marginBottom="65dp"
+        android:padding="8dp">
 
-    <EditText
-        android:id="@+id/editTextNoteContent"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:hint="Текст заметки"
-        android:textSize="16sp"
-        android:inputType="textMultiLine"
-        android:gravity="top"
-        android:paddingTop="8dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <!-- Заголовок -->
+            <EditText
+                android:id="@+id/editTextNoteTitle"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:hint="Заголовок"
+                android:inputType="text"
+                android:textSize="18sp" />
+
+            <!-- Панель форматирования -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnBold"
+                    android:layout_width="57dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/primaryColor"
+                    android:textColor="@android:color/white"
+                    android:text="B" />
+
+                <Button
+                    android:id="@+id/btnItalic"
+                    android:layout_width="57dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/primaryColor"
+                    android:textColor="@android:color/white"
+                    android:text="I" />
+
+                <Button
+                    android:id="@+id/btnUnderline"
+                    android:layout_width="57dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/primaryColor"
+                    android:textColor="@android:color/white"
+                    android:text="U" />
+
+                <Button
+                    android:id="@+id/btnAlignLeft"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/primaryColor"
+                    android:text="⟸"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btnAlignCenter"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/primaryColor"
+                    android:text="⇔"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btnAlignRight"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/primaryColor"
+                    android:textColor="@android:color/white"
+                    android:text="⟹" />
+            </LinearLayout>
+
+            <!-- Выбор категории -->
+            <Spinner
+                android:id="@+id/spinnerCategory"
+                android:layout_width="match_parent"
+                android:layout_height="51dp"
+                android:layout_marginTop="12dp"
+                android:entries="@array/categories" />
+
+            <!-- RichEditor для контента -->
+            <jp.wasabeef.richeditor.RichEditor
+                android:id="@+id/richEditor"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="12dp"
+                android:background="@android:color/white"
+                android:padding="8dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Кнопка Сохранить всегда внизу -->
     <Button
         android:id="@+id/btnSaveNote"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Сохранить"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
         android:backgroundTint="@color/primaryColor"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="8dp"/>
+        android:text="Сохранить"
+        android:textColor="@android:color/white" />
 
-</LinearLayout>
+</RelativeLayout>
